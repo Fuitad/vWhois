@@ -1,0 +1,28 @@
+{
+    "name": "fuitad/vwhois",
+    "description": "PHP Whois Client and Parser",
+    "type": "library",
+    "license": "MIT",
+    "keywords": ["whois"],
+    "authors": [
+        {
+            "name": "Pierre-Luc Brunet",
+            "email": "fuitad@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "nesbot/carbon": "^1.22",
+        "rappasoft/laravel-helpers": "dev-master",
+        "strscan/strscan": "dev-master"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "4.4.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "vWhois\\": "src/"
+        }
+    },
+    "minimum-stability": "dev"
+}
