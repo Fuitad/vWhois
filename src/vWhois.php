@@ -59,7 +59,8 @@ class vWhois
     protected function loadDefinitions()
     {
         foreach ($this->definitionTypes as $definitionType) {
-            $definitionFile = basename(__DIR__) . '/../data/' . $definitionType . '.json';
+            $definitionFile = dirname(__FILE__) . '/../data/' . $definitionType . '.json';
+
             if (file_exists($definitionFile)) {
                 $this->definitions[$definitionType] = json_decode(file_get_contents($definitionFile), true);
             } else {
