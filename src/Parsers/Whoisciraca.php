@@ -53,6 +53,14 @@ class Whoisciraca extends Base
                     $contact->zip = array_get($contactBlock, 'Postal Code');
                     $contact->countryCode = array_get($contactBlock, 'Country');
                     $contact->phone = array_get($contactBlock, 'Phone');
+
+                    /*
+                     * TODO
+                     *
+                     * There's a bug in this section with Cira. example, bnc.ca returns
+                     * fax: "Email:             dns@bnc.ca"
+                     * and nothing for email
+                     */
                     $contact->fax = array_get($contactBlock, 'Fax');
                     $contact->email = array_get($contactBlock, 'Email');
                     $this->record->addContact($contact, $type);

@@ -18,7 +18,7 @@ class Record
         'updatedOn' => '',
         'expiresOn' => '',
         'registrar' => '',
-        'status' => '',
+        'status' => [],
         'nameservers' => [],
         'contacts' => [
             'registrant' => null,
@@ -36,14 +36,24 @@ class Record
     ];
 
     /**
-     * @var string
+     * @var bool
      */
-    public $raw;
+    public $incomplete;
+
+    /**
+     * @var bool
+     */
+    public $throttled;
+
+    /**
+     * @var bool
+     */
+    public $unavailable;
 
     /**
      * @var string
      */
-    public $server;
+    public $content;
 
     public function __get($key)
     {
@@ -98,8 +108,12 @@ class Record
     {
         return array_merge(
             [
-                'server' => $this->server,
-                'raw' => $this->raw
+                'response' => [
+                    'incomplete' => $this->incomplete,
+                    'throttled' => $this->throttled,
+                    'unavailable' => $this->unavailable,
+                    'content' => $this->content
+                ]
             ],
             $this->properties
         );

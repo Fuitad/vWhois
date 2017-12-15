@@ -8,7 +8,7 @@ class BaseVerisign extends Base
     {
         parent::parse();
 
-        $this->record->registered = !preg_match('/No match for /i', $this->record->raw);
+        $this->record->registered = !preg_match('/No match for /i', $this->record->content);
 
         if ($this->record->registered) {
             $this->record->domain = $this->valForKey('Domain Name');

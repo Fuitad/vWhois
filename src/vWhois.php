@@ -180,7 +180,7 @@ class vWhois
         return $this;
     }
 
-    public function query($query = false, $allowRecursive = true, $returnAllResponses = false)
+    public function lookup($query = false)
     {
         if (!$query) {
             return false;
@@ -190,11 +190,9 @@ class vWhois
             $this->prepareForLookup($query);
         }
 
-        $this->adapter->request($query, $allowRecursive);
+        $response = $this->adapter->lookup($query);
 
-        $response = $this->adapter->getBuffer();
-
-        return $returnAllResponses ? $response : end($response);
+        return $response;
     }
 
     /**

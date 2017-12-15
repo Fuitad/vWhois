@@ -86,3 +86,26 @@ if (!function_exists('studly')) {
         return $studlyCache[$key] = str_replace(' ', '', $value);
     }
 }
+
+if (!function_exists('in_arrayi')) {
+    function in_arrayi($needle, $haystack)
+    {
+        return in_array(strtolower($needle), array_map('strtolower', $haystack));
+    }
+}
+
+if (!function_exists('dd')) {
+    function dd()
+    {
+        $args = func_get_args();
+        call_user_func_array('dump', $args);
+        die();
+    }
+}
+if (!function_exists('d')) {
+    function d()
+    {
+        $args = func_get_args();
+        call_user_func_array('dump', $args);
+    }
+}

@@ -15,9 +15,9 @@ class Whoisianaorg extends Base
     {
         parent::parse();
 
-        $this->record->domain = $this->valForKey('domain');
+        $this->record->domain = strtolower($this->valForKey('domain'));
 
-        $this->record->registered = ($this->valForKey('status') === 'ACTIVE');
+        $this->record->registered = (strtolower($this->valForKey('status')) === 'active');
 
         if ($this->record->registered) {
             //foreach ($this->contacts AS $type => $heading) {
@@ -28,7 +28,7 @@ class Whoisianaorg extends Base
             //}
             $this->record->createdOn = $this->valForKey('created');
 
-            $this->record->updatedOn = $this->valForKey('updated');
+            $this->record->updatedOn = $this->valForKey('changed');
 
             foreach ($this->valForKey('nserver') as $whoisNs) {
                 list($server, $ipv4, $ipv6) = explode(' ', $whoisNs);

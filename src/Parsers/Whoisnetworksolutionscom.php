@@ -4,12 +4,10 @@ namespace vWhois\Parsers;
 
 class Whoisnetworksolutionscom extends BaseIcannCompliant
 {
-    public function parse()
+    protected function setExpiresOn()
     {
-        parent::parse();
+        $this->record->expiresOn = $this->valForKey('Registry Expiry Date');
 
-        if ($this->record->registered) {
-            $this->record->expiresOn = $this->valForKey('Registry Expiry Date');
-        }
+        return $this;
     }
 }

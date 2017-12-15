@@ -20,17 +20,12 @@ class BaseIcannCompliant extends Base
 
         $this->record->domain = strtolower($this->valForKey('Domain Name'));
 
-        $this->record->registered = !preg_match('/No match for /i', $this->record->raw);
+        $this->record->registered = !preg_match('/No match for /i', $this->record->content);
 
         if ($this->record->registered) {
             $this->record->domain_id = strtolower($this->valForKey('Registry Domain ID'));
 
-            $this->record->registrar = new Registrar(
-                $this->valForKey('Registrar IANA ID'),
-                $this->valForKey('Registrar'),
-                $this->valForKey('Registrar'),
-                $this->valForKey('Registrar URL')
-            );
+            $this->setRegistrar();
 
             foreach ($this->contacts as $type => $kvStart) {
                 $contact = new Contact();
@@ -49,18 +44,65 @@ class BaseIcannCompliant extends Base
                 $this->record->addContact($contact, $type);
             }
 
-            $this->record->status = $this->valForKey('Domain Status');
+            $this->setStatus()
+                ->setCreatedOn()
+                ->setUpdatedOn()
+                ->setExpiresOn();
 
-            $this->record->createdOn = $this->valForKey('Creation Date');
-
-            $this->record->updatedOn = $this->valForKey('Updated Date');
-
-            $this->record->expiresOn = $this->valForKey('Registrar Registration Expiration Date');
-
-            foreach ($this->valForKey('Name Server') as $whoisNs) {
+            foreach ($this->valForKey('Name Server', []) as $whoisNs) {
                 $nameserver = new Nameserver($whoisNs);
                 $this->record->addNameserver($nameserver);
             }
         }
+    }
+
+    protected function setRegistrar()
+    {
+        $this->record->registrar = new Registrar(
+            $this->firstValIfArray($this->valForKey('Registrar IANA ID')),
+            $this->firstValIfArray($this->valForKey('Registrar')),
+            $this->firstValIfArray($this->valForKey('Registrar')),
+            $this->firstValIfArray($this->valForKey('Registrar URL'))
+        );
+
+        return $this;
+    }
+
+    protected function setStatus()
+    {
+        $statusFound = [];
+
+        foreach ($this->arrayValIfSingle($this->valForKey('Domain Status')) as $status) {
+            $statusName = substr($status, 0, strpos($status, ' '));
+
+            if (!in_arrayi($statusName, $statusFound)) {
+                $statusFound[] = $statusName;
+            }
+        }
+
+        $this->record->status = $statusFound;
+
+        return $this;
+    }
+
+    protected function setCreatedOn()
+    {
+        $this->record->createdOn = $this->firstValIfArray($this->valForKey('Creation Date'));
+
+        return $this;
+    }
+
+    protected function setUpdatedOn()
+    {
+        $this->record->updatedOn = $this->firstValIfArray($this->valForKey('Updated Date'));
+
+        return $this;
+    }
+
+    protected function setExpiresOn()
+    {
+        $this->record->expiresOn = $this->valForKey('Registrar Registration Expiration Date');
+
+        return $this;
     }
 }

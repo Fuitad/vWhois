@@ -71,30 +71,40 @@ class Base
 
         socket_close($socket);
 
-        $buffer = str_replace("\r", '', $buffer);
-        //$buffer = str_replace("\n", '[N]', $buffer);
+        $buffer = str_replace("\r\n", "\n", $buffer);
 
-        return $buffer;
+        return trim($buffer);
     }
 
     protected function bufferAppend($response, $host)
     {
-        $parserClass = 'vWhois\\Parsers\\' . ucfirst(camel_case(str_replace('.', '', $host)));
+        $this->buffer[$host] = $response;
+    }
+
+    protected function request($query)
+    {
+        throw new NotImplementedException();
+    }
+
+    public function lookup($query)
+    {
+        $this->request($query);
+
+        $queriedHosts = array_keys($this->buffer);
+
+        $hostToParse = end($queriedHosts);
+
+        $parserClass = 'vWhois\\Parsers\\' . ucfirst(camel_case(str_replace('.', '', $hostToParse)));
 
         if (!class_exists($parserClass)) {
-            throw new NoParserForServerException("No parser for ${host} found. The class name should be ${parserClass}");
+            throw new NoParserForServerException("No parser for ${hostToParse} found. The class name should be ${parserClass}");
         }
 
-        $parser = new $parserClass($response, $host);
+        $parser = new $parserClass(implode("\n", $this->buffer), $hostToParse);
 
         $parser->parse();
 
-        $this->buffer[] = $parser->record;
-    }
-
-    public function request($query, $allowRecursive = true)
-    {
-        throw new NotImplementedException();
+        return $parser->record;
     }
 
     public function getBuffer()
