@@ -11,8 +11,13 @@ class Whoistucowscom extends BaseIcannCompliant
         if ($this->record->registered) {
             $this->record->domain_id = strtolower($this->valForKey('Domain ID'));
             $this->record->reseller = strtolower($this->valForKey('Reseller'));
-
-            $this->record->expiresOn = $this->valForKey('Registrar Registration Expiration Date');
         }
+    }
+
+    protected function setExpiresOn()
+    {
+        $this->record->expiresOn = $this->valForKey('Registrar Registration Expiration Date');
+
+        return $this;
     }
 }
