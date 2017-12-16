@@ -6,14 +6,12 @@ class Registrar
 {
     public $id;
     public $name;
-    public $organization;
     public $url;
 
-    public function __construct($id = '', $name = '', $organization = '', $url = '')
+    public function __construct($id = '', $name = '', $url = '')
     {
         $this->id = $id;
         $this->name = $name;
-        $this->organization = $organization;
         $this->url = $url;
     }
 

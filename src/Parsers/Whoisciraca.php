@@ -35,7 +35,6 @@ class Whoisciraca extends Base
             // $this->record->registrar = new Registrar(
             //     $this->valForKey('Registrar IANA ID'),
             //     $this->valForKey('Registrar'),
-            //     $this->valForKey('Registrar'),
             //     $this->valForKey('Registrar URL')
             // );
 

@@ -61,7 +61,6 @@ class BaseIcannCompliant extends Base
         $this->record->registrar = new Registrar(
             $this->firstValIfArray($this->valForKey('Registrar IANA ID')),
             $this->firstValIfArray($this->valForKey('Registrar')),
-            $this->firstValIfArray($this->valForKey('Registrar')),
             $this->firstValIfArray($this->valForKey('Registrar URL'))
         );
 
@@ -73,7 +72,9 @@ class BaseIcannCompliant extends Base
         $statusFound = [];
 
         foreach ($this->arrayValIfSingle($this->valForKey('Domain Status')) as $status) {
-            $statusName = substr($status, 0, strpos($status, ' '));
+            if (strpos($status, ' ') !== false) {
+                $statusName = substr($status, 0, strpos($status, ' '));
+            }
 
             if (!in_arrayi($statusName, $statusFound)) {
                 $statusFound[] = $statusName;

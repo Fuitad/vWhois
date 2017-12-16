@@ -41,7 +41,6 @@ class Whoisnicuk extends Base
             $this->record->registrar = new Registrar(
                 '',
                 $this->valForKey('Registrar'),
-                $this->valForKey('Registrar'),
                 $this->valForKey('URL')
             );
 
