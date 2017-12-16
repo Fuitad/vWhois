@@ -8,6 +8,8 @@ use vWhois\Record\Contact;
 
 class Whoisnicuk extends Base
 {
+    protected $allowKeyFollowedByNewline = true;
+
     protected $contacts = [
         'registrant' => 'Registrant:',
         'administrative' => 'Administrative contact:',

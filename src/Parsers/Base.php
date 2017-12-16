@@ -9,6 +9,7 @@ class Base
 {
     public $record;
 
+    protected $allowKeyFollowedByNewline = false;
     protected $recordKv = [];
     protected $stringScanner;
 
@@ -96,7 +97,7 @@ class Base
 
     protected function captureAllKv($source, &$target)
     {
-        if (preg_match_all('/(?<key>.+?):\n?(?<value>.*?)(\n|\z)/', $source, $recordKv, PREG_SET_ORDER)) {
+        if (preg_match_all('/(?<key>.+?):' . ($this->allowKeyFollowedByNewline ? '\n?' : '') . '(?<value>.*?)(\n|\z)/', $source, $recordKv, PREG_SET_ORDER)) {
             foreach ($recordKv as $record) {
                 $k = trim($record['key']);
                 $v = trim($record['value']);

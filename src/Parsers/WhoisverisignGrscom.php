@@ -4,12 +4,10 @@ namespace vWhois\Parsers;
 
 class WhoisverisignGrscom extends BaseVerisign
 {
-    public function parse()
+    protected function setExpiresOn()
     {
-        parent::parse();
+        $this->record->expiresOn = $this->valForKey('Registry Expiry Date');
 
-        if ($this->record->registered) {
-            $this->record->expiresOn = $this->valForKey('Registry Expiry Date');
-        }
+        return $this;
     }
 }
