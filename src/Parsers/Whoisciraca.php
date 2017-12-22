@@ -32,11 +32,12 @@ class Whoisciraca extends Base
         $this->record->registered = in_array($this->valForKey('Domain status'), $this->registredStatus);
 
         if ($this->record->registered) {
-            // $this->record->registrar = new Registrar(
-            //     $this->valForKey('Registrar IANA ID'),
-            //     $this->valForKey('Registrar'),
-            //     $this->valForKey('Registrar URL')
-            // );
+            $whoisRegistrarBlock = $this->findBlock('Registrar:', '\n\n', false);
+
+            $this->record->registrar = new Registrar(
+                 array_get($whoisRegistrarBlock, 'Name'),
+                 array_get($whoisRegistrarBlock, 'Number')
+            );
 
             foreach ($this->contacts as $type => $heading) {
                 $contactBlock = $this->findBlock($heading);
