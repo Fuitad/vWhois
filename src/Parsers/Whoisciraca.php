@@ -27,7 +27,7 @@ class Whoisciraca extends Base
     {
         parent::parse();
 
-        $this->record->domain = strtolower($this->valForKey('Domain Name'));
+        $this->record->domain = strtolower($this->valForKey('Domain name'));
 
         $this->record->registered = in_array($this->valForKey('Domain status'), $this->registredStatus);
 
@@ -35,8 +35,8 @@ class Whoisciraca extends Base
             $whoisRegistrarBlock = $this->findBlock('Registrar:', '\n\n', false);
 
             $this->record->registrar = new Registrar(
-                 array_get($whoisRegistrarBlock, 'Name'),
-                 array_get($whoisRegistrarBlock, 'Number')
+                 array_get($whoisRegistrarBlock, 'Number'),
+                 array_get($whoisRegistrarBlock, 'Name')
             );
 
             foreach ($this->contacts as $type => $heading) {
@@ -78,7 +78,18 @@ class Whoisciraca extends Base
             if ($whoisNameserversBlock) {
                 $whoisNameservers = explode("\n", trim($whoisNameserversBlock));
                 foreach ($whoisNameservers as $whoisNs) {
-                    $nameserver = new Nameserver(trim($whoisNs));
+                    $whoisNs = trim($whoisNs);
+
+                    if (!preg_match('/^(?<nameserver>.*?)(\s+(?<ipv4>.*?))?(\s+(?<ipv6>.*?))?$/', $whoisNs, $nsBlocks)) {
+                        continue;
+                    }
+
+                    $nameserver = new Nameserver(
+                        array_get($nsBlocks, 'nameserver'),
+                        array_get($nsBlocks, 'ipv4'),
+                        array_get($nsBlocks, 'ipv6')
+                    );
+
                     $this->record->addNameserver($nameserver);
                 }
             }
