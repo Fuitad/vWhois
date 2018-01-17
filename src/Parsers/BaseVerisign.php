@@ -2,7 +2,7 @@
 
 namespace vWhois\Parsers;
 
-class BaseVerisign extends Base
+class BaseVerisign extends BaseIcannCompliant
 {
     public function parse()
     {
@@ -17,26 +17,5 @@ class BaseVerisign extends Base
                 ->setUpdatedOn()
                 ->setExpiresOn();
         }
-    }
-
-    protected function setCreatedOn()
-    {
-        $this->record->createdOn = $this->firstValIfArray($this->valForKey('Creation Date'));
-
-        return $this;
-    }
-
-    protected function setUpdatedOn()
-    {
-        $this->record->updatedOn = $this->firstValIfArray($this->valForKey('Updated Date'));
-
-        return $this;
-    }
-
-    protected function setExpiresOn()
-    {
-        $this->record->expiresOn = $this->valForKey('Registry Expiry Date');
-
-        return $this;
     }
 }
