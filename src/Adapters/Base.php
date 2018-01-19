@@ -51,25 +51,29 @@ class Base
 
         $socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
         if ($socket === false) {
-            throw new SocketException('socket_create() failed: reason: ' . socket_strerror(socket_last_error()));
+            throw new SocketException('socket_create() failed. Reason: ' . socket_strerror(socket_last_error()));
         }
 
         $result = socket_connect($socket, $host, $port);
         if ($result === false) {
-            throw new SocketException('socket_connect() failed: reason: ' . socket_strerror(socket_last_error()));
+            throw new SocketException('socket_connect() failed. Reason: ' . socket_strerror(socket_last_error()));
         }
 
         $in = "${query}\r\n";
 
         $buffer = '';
 
-        socket_write($socket, $in, strlen($in));
+        try {
+            socket_write($socket, $in, strlen($in));
 
-        while ($out = socket_read($socket, 2048)) {
-            $buffer .= $out;
+            while ($out = socket_read($socket, 2048)) {
+                $buffer .= $out;
+            }
+
+            socket_close($socket);
+        } catch (\Exception $e) {
+            throw new SocketException('Unable to perform complete communication with server. Reason: ' . socket_strerror(socket_last_error()));
         }
-
-        socket_close($socket);
 
         $buffer = str_replace("\r\n", "\n", $buffer);
 
