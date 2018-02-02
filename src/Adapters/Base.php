@@ -96,18 +96,26 @@ class Base
 
         $queriedHosts = array_keys($this->buffer);
 
+        $foundParserClass = false;
+
         for (end($queriedHosts); key($queriedHosts) !== null; prev($queriedHosts)) {
             $hostToParse = current($queriedHosts);
 
             $parserClass = 'vWhois\\Parsers\\' . ucfirst(camel_case(str_replace('.', '', $hostToParse)));
 
             if (class_exists($parserClass)) {
+                $foundParserClass = true;
                 break;
             }
         }
 
-        if (!isset($parserClass)) {
+        if (!$foundParserClass) {
             $hostToParse = end($queriedHosts);
+
+            if (!isset($parserClass)) {
+                $parserClass = 'UNKNOWN';
+            }
+            
             throw new NoParserForServerException("No parser for ${hostToParse} found. The class name should be ${parserClass}");
         }
 
