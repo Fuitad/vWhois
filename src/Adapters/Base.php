@@ -72,7 +72,8 @@ class Base
 
             socket_close($socket);
         } catch (\Exception $e) {
-            $exceptionMessage = 'Unable to perform complete communication with server ('. $host. ':' . $port .'). Reason: ' . socket_strerror(socket_last_error());
+            $exceptionMessage = 'Unable to perform complete communication with server ('. $host. ':' . $port .'). '.
+                'Reason: ' . socket_strerror(socket_last_error());
 
             if (strlen($buffer)) {
                 $exceptionMessage .= "\n\nServer said: ".$buffer;
